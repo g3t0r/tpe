@@ -1,6 +1,11 @@
 project_dir=$(cat ~/.projects | fzf) &&
 name=$(basename $project_dir)
 
+if [ -z $name ];
+    then
+        exit 0;
+fi
+
 if [ -z $TMUX ];
     then
         tmux new-session -s $name -c $project_dir;
