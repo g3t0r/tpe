@@ -3,14 +3,19 @@
 print_usage() {
     echo "Use tpe to browse projects";
     echo "Use tpe r to refresh projects list";
+    echo "Use tpe a to manually add project to list";
+}
+
+add_project_manually() {
+    echo $1 >> ~/.tpemanual;
 }
 
 refresh_projects_list() {
-    find ~/Documents -type d -name .git | sed "s/.git//g" > ~/.projects;
+    find ~/Documents -type d -name .git | sed "s/.git//g" > ~/.tpeprojects;
 }
 
 create_session() {
-    project_dir=$(cat ~/.projects | fzf) &&
+    project_dir=$(cat ~/.tpeprojects ~/.tpemanual| fzf) &&
     name=$(basename $project_dir)
 
     if [ -z $name ];
@@ -33,6 +38,8 @@ if [ -z $1 ];
     else
         if [ $1 = "r" ]; then
             refresh_projects_list
+        elif [ $1 = "a" ]; then
+          add_project_manually $2
         else
             print_usage
         fi
